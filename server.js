@@ -1,0 +1,25 @@
+'use strict';
+
+const express = require('express');
+const socketIO = require('socket.io');
+const path = require('path');
+
+const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'index.html');
+
+const server = express()
+  .use((req, res) => res.sendFile(INDEX) )
+  .listen(PORT, (err) => {
+    if (err) throw err;
+    console.log(`Listening on ${ PORT }`);
+  });
+
+const io = socketIO(server);
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.on('getTime', () => {
+    socket.emit('time', new Date().toTimeString());
+  });
+  socket.on('disconnect', () => console.log('Client disconnected'));
+});
