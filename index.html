@@ -9,8 +9,6 @@
       socket.on('time', function(timeString) {
         el.innerHTML = 'Server time: ' + timeString;
       });
-
-      setInterval(socket.emit.bind(socket, 'getTime'), 1000);
     </script>
   </body>
 </html>
