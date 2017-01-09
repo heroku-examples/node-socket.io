@@ -51,7 +51,12 @@ io.on('connection', (socket) => {
   	  });
 
   	  resp.on("end", function() {
-  	  	var json = JSON.parse(data);
+  	  	try {
+  	  		var json = JSON.parse(data);	
+  	  	} catch(e) {
+  	  		json = {};
+  	  	}
+  	  	
   	  	var drops = [];
 
   	  	if(!json.success) {
