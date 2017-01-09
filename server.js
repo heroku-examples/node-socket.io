@@ -5,11 +5,13 @@ const socketIO = require('socket.io');
 const path = require('path');
 const bodyParser = require('body-parser');
 const http = require('http');
+const getDropInfo = require('./drops.js');
 
 const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, 'index.html');
 const CURRENT_PATH = '/dff/event/challenge/90/get_battle_init_data';
 //const CURRENT_PATH = '/dff/event/suppress/2025/single/get_battle_init_data';
+
 
 const server = express()
 	.use(bodyParser.json())
@@ -68,17 +70,19 @@ io.on('connection', (socket) => {
   	  	json.battle.rounds.forEach(function(round) {
 
   	  		round.drop_item_list.forEach(function(drop) {
-  	  			drops.push(drop);
+  	  			drops.push(getDropInfo(drop));
   	  		});
 
   	  		round.enemy.forEach(function(enemy) {
   	  			enemy.children.forEach(function(child) {
   	  				child.drop_item_list.forEach(function(drop) {
-  	  					drops.push(drop);
+  	  					drops.push(getDropInfo(drop));
   	  				});
   	  			});
   	  		});
   	  	});
+
+  	  	console.log(drops);
 
   	  	message.drops = drops;
 

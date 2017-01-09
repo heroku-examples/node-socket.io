@@ -5,6 +5,41 @@
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js" integrity="sha256-jCRPoAgIIooCTnLmaSyKMPrFgFh6/T0e8c3i+KkZZ6U=" crossorigin="anonymous"></script> -->
+
+  <style>
+  /*#attach-point img {
+    max-width: 50px;
+    height: auto;
+  }*/
+
+  body {
+    padding-bottom: 50px;
+  }
+
+  #attach-point .col {
+    /*white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;*/
+    text-align: center;
+  }
+
+  #attach-point .table-striped {
+    margin-top: 20px;
+  }
+
+  .img-cell {
+    width: 100px;
+  }
+
+  footer {
+    background-color: #f7f7f7;
+/*    color: white;*/
+  }
+  </style>
+
   <title>FFRKreeper</title>
   <body>
     <nav class="navbar navbar-light bg-faded">
@@ -14,41 +49,59 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm">
+          <p></p>
           <form>
             <div class="form-group">
-              <label for="session-id">Session ID</label>
+              <!-- <label for="session-id">Session ID</label> -->
               <input type="text" class="form-control" id="session-id" placeholder="Paste your session id here">
             </div>
           </form>
 
           <a class="btn btn-block btn-primary" id="btn-instructions" href="#">Show Instructions</a>
 
-          <ol id="instructions" style="display: none;">
-            <li><a href="http://useyourloaf.com/blog/remote-packet-capture-for-ios-devices/">Set up WireShark and your iOS device, using this link</a></li>
-            <li>Parse through the messages from ffrk.denagames.com (maybe by IP address) and find your session id (it'll look like this: Cookie: http_session_sid=xxxxxxxxxxxxxxxxxxxxx). Make sure you don't copy the semicolon or the 'http_session_sid' part.</li>
-            <li>Paste that value in the box above and then go into a battle.</li>
-            <li>This site will not work for MP Raid Dungeons, but solo Raid Dungeons are fine</li>
-            <li>In the messages, if you see "..." that means you're either not in a battle or you need to refresh and re-paste your session id.</li>
-          </ol>
+          <div id="instructions" style="display: none;">
+            <p></p>
+            <p>Welcome to FFRKreeper! This app will show you your drops when you join a battle. That way, if it's a shitty drop, you don't have to worry about completing the battle and you can flee and join again until you get a good drop!</p>
+            <p>A few notes:</p>
+            <ol>
+              <li><a href="http://useyourloaf.com/blog/remote-packet-capture-for-ios-devices/">Set up WireShark and your iOS device, using this link</a></li>
+              <li>Parse through the messages from ffrk.denagames.com (maybe by IP address) and find your session id (it'll look like this: Cookie: http_session_sid=xxxxxxxxxxxxxxxxxxxxx). Make sure you don't copy the semicolon or the 'http_session_sid' part.</li>
+              <li>Paste that value in the box above and then go into a battle.</li>
+              <li>This site will not work for MP Raid Dungeons, but solo Raid Dungeons are fine</li>
+              <li>In the messages, if you see "..." that means you're either not in a battle or you need to refresh and re-paste your session id.</li>
+              <li>Keep an eye on the 'status' below. If you become disconnect, refresh and paste your session id again.</li>
+            </ol>
+          </div>
           <p></p>
-          <p>Built by <a href="http://gunnertech.com">By Gunner Technology</a></p>
-          <small>Sanity Check: <span id='server-time'></span></small>
+          
+          <!-- <small>Sanity Check: <span id='server-time'></span></small> -->
         </div>
-        <div class="col-sm" id="attach-point">
-          <!-- <table class="table table-striped">
-            <thead class="thead-inverse">
-              <tr>
-                <th>Message #</th>
-                <th>Message</th>
-              </tr>
-            </thead>
-            <tbody>
-              
-            </tbody>
-          </table> -->
+        <div class="col-sm">
+          <div id="attach-point"></div>
         </div>
       </div>
     </div>
+
+    <footer class="fixed-bottom">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">
+            <div class="d-flex flex-row">
+              <div class="p-2"><small>By <a href="http://gunnertech.com">Gunner Technology</a></small></div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="d-flex flex-row-reverse">
+              <div class="p-2">
+                <span class="badge badge-default">Status: Connecting...</span>
+                <span style="display: none;" class="badge badge-danger">Status: Disconnected</span>
+                <span style="display: none;" class="badge badge-success">Status: Connected</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
     
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -60,57 +113,8 @@
       var startTimer = null;
       var acknowledgeTimer = null;
       var lastHTML = "";
+      var statusTimer = null;
 
-      var itemMap = {
-        "40000004": "Greater Power Orb",
-        "40000005": "Major Power Orb",
-
-        "40000009": "Greater White Orb",
-        "40000010": "Major White Orb",
-
-        "40000014": "Greater Black Orb",
-        "40000015": "Major Black Orb",
-
-        "40000024": "Greater Summon Orb",
-        "40000025": "Major Summon Orb",
-
-        "40000029": "Greater Non Elemental Orb",
-        "40000030": "Major Non Elemental Orb",
-
-        "40000034": "Greater Fire Orb",
-        "40000035": "Major Fire Orb",
-
-        "40000039": "Greater Ice Orb",
-        "40000040": "Major Ice Orb",
-
-        "40000044": "Greater Lightning Orb",
-        "40000045": "Major Lightning Orb",
-
-        "40000049": "Greater Earth Orb",
-        "40000050": "Major Earth Orb",
-
-        "40000054": "Greater Wind Orb",
-        "40000055": "Major Wind Orb",
-
-        "40000059": "Greater Holy Orb",
-        "40000060": "Major Holy Orb",
-
-        "40000064": "Greater Dark Orb",
-        "40000065": "Major Dark Orb",
-
-        "40000066": "Power Crystal",
-        "40000067": "White Crystal",
-        "40000068": "Black Crystal",
-        "40000070": "Summon Crystal",
-        "40000071": "Non Elemental Crystal",
-        "40000072": "Fire Crystal",
-        "40000073": "Ice Crystal",
-        "40000074": "Lightning Crystal",
-        "40000075": "Earth Crystal",
-        "40000076": "Wind Crystal",
-        "40000077": "Holy Crystal",
-        "40000078": "Dark Crystal",
-      };
 
       function crankItUp() {
         if(startTimer) {
@@ -124,30 +128,36 @@
             $('#session-id').addClass('disabled').attr('disabled','disabled');
 
             started = true;
-            socket.emit('sessionId', sessionId, function (data) {
+
+            //SEND THE SESSION ID TO THE SERVER TO TELL IT TO GET THE DATA AND SUBSCRIBE TO THE ROOM
+            socket.emit('sessionId', sessionId, function (data) { 
               console.log(data);
             });
 
             socket.on(sessionId, function(message) {
-              var html = "";
+              var html = '<table class="table table-striped"><thead class="thead-inverse"><tr><th colspan="2">Your Loot</th></tr></thead><tbody>';
 
               if(message.error) {
-                html = '<div class="alert alert-danger" role="alert"><strong>Not in battle!</strong> You have to be in battle to see your drops!</div>';
+                html = '<tr class="table-danger"><td colspan="2"><strong>Not in battle!</strong> You have to be in battle to see your drops!</td></tr>';
               } else if(message.drops == 0) {
-                html = '<div class="alert alert-warning" role="alert"><strong>Nope.</strong> No drops in this battle</div>';
+                html = '<tr class="table-warning"><td colspan="2"><strong>Nope!</strong> There ain\'t nothing dropping.</td></tr>';
               } else {
                 $.each(message.drops, function(i, drop) {
-                  console.log(drop);
-
-                  if(drop.item_id && itemMap[drop.item_id]) {
-                    html += '<div class="alert alert-'+(parseInt(drop.rarity) > 4 ? 'success' : 'info')+'" role="alert"><h4 class="alert-heading">'+itemMap[drop.item_id]+' x'+drop.num+'</h4><img src="https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/ability_material/'+drop.item_id+'/'+drop.item_id+'_112.png" /></div>';
-                  } else {
-                    html += '<div class="alert alert-warning" role="alert"><strong>Unmapped Item.</strong> {num: '+drop.num+', uid: '+drop.uid+', rarity: '+drop.rarity+', type: '+drop.item+', item_id: '+drop.item_id+'} </div>';
-                  }    
-                });  
+                  html += '<tr class="table-'+(parseInt(drop.rarity) > 4 ? 'success' : 'info')+'">';
+                  html += '<td class="img-cell">';
+                  html += '<img class="img-fluid" src="'+drop.image+'" />';
+                  html += '</td>';
+                  html += '<td>';
+                  html += (drop.name+' x'+drop.num);
+                  html += '</td>';
+                  html += '</tr>';
+                  
+                });
               }
 
-              if(lastHTML != html) {
+              html += '</tbody></table>';
+
+              if(lastHTML != html) { //DON'T ADD IT AGAIN IF IT'S THE SAME AS LAST TIME
                 update++;
                 $('#attach-point').prepend(html);
               }
@@ -158,6 +168,7 @@
                 clearTimeout(acknowledgeTimer);
               }
 
+              //WAIT A FEW SECONDS THEN TELL THE SERVER TO SEND ANOTHER UPDATE
               acknowledgeTimer = setTimeout(function() {
                 socket.emit('sessionId', sessionId, function (data) {
                   console.log(data);
@@ -178,8 +189,24 @@
 
       $('#session-id').on('paste', crankItUp);
 
+      statusTimer = setTimeout(function() {
+        $('.badge-default').hide();
+        $('.badge-success').hide();
+        $('.badge-danger').show();
+      },LOOP_FREQUENCY);
+
       socket.on('time', function(timeString) {
-        el.innerHTML = 'Server time: ' + timeString;
+        clearTimeout(statusTimer);
+        statusTimer = setTimeout(function() {
+          $('.badge-default').hide();
+          $('.badge-success').hide();
+          $('.badge-danger').show();
+        }, LOOP_FREQUENCY);
+
+        $('.badge-default').hide();
+        $('.badge-success').show();
+        $('.badge-danger').hide();
+        // el.innerHTML = 'Server time: ' + timeString;
       });
     </script>
   </body>
