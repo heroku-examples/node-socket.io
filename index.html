@@ -1,10 +1,95 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
   <body>
-    <p id='server-time'></p>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm">
+          <h2>
+            FFRK Creeper
+          </h2>
+          <h5>
+            <a href="http://gunnertech.com">By Gunner Technology</a>
+          </h5>
+          <form>
+            <div class="form-group">
+              <label for="session-id">Session ID</label>
+              <input type="text" class="form-control" id="session-id" placeholder="Paste your session id here">
+            </div>
+             <small>Sanity Check: <span id='server-time'></span></small>
+          </form>
+
+          <a class="btn btn-block btn-primary" id="btn-instructions" href="#">Show Instructions</a>
+
+          <ol id="instructions" style="display: none;">
+            <li>Set up WireShark, using this link</li>
+            <li>Parse through the messages from ffrk.denagames.com (maybe by IP address) and find your session id (it'll look like this: Cookie: http_session_sid=xxxxxxxxxxxxxxxxxxxxx). Make sure you don't copy the semicolon or the 'http_session_sid' part.</li>
+            <li>Paste that value in the box above and then go into a battle.</li>
+            <li>This site will not work for MP Raid Dungeons, but solo Raid Dungeons are fine</li>
+          </ol>
+        </div>
+        <div class="col-sm">
+          <table class="table table-striped">
+            <thead class="thead-inverse">
+              <tr>
+                <th>Message #</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
       var el = document.getElementById('server-time');
+      var update = 0;
+      var LOOP_FREQUENCY = 8000;
+      var lastSessionId = null;
+
+      function crankItUp() {
+        setTimeout(function () {
+          var sessionId = $('#session-id').val();
+          if(sessionId && lastSessionId != sessionId) {
+
+            lastSessionId = sessionId;
+
+            socket.emit('sessionId', sessionId, function (data) {
+              console.log(data);
+            });
+
+            socket.on(sessionId, function(serverMessage) {
+              update++;
+              $('.table tbody').prepend('<tr><td>#'+update+'</td><td>'+serverMessage+'</td></tr>');
+              
+              setTimeout(function() {
+                socket.emit('sessionId', sessionId, function (data) {
+                  console.log(data);
+                });
+              }, LOOP_FREQUENCY);
+            });
+          }
+        }, 100);
+      }
+
+      $('#btn-instructions').click(function(event) {
+        event.preventDefault();
+
+        $('#instructions').toggle();
+      })
+
+      $('#session-id').change(crankItUp);
+
+      $('#session-id').on('paste', crankItUp);
 
       socket.on('time', function(timeString) {
         el.innerHTML = 'Server time: ' + timeString;
