@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
   	  	var drops = [];
 
   	  	if(!json.success) {
-  	  		message = "You're probably not in battle. If you are in battle, you probably need to re-paste your session cookie";
+  	  		message = "...";
   	  		io.emit(sessionId, message);
   	  		return;
   	  	}
