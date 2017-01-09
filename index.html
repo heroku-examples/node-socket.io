@@ -34,8 +34,8 @@
           <p>Built by <a href="http://gunnertech.com">By Gunner Technology</a></p>
           <small>Sanity Check: <span id='server-time'></span></small>
         </div>
-        <div class="col-sm">
-          <table class="table table-striped">
+        <div class="col-sm" id="attach-point">
+          <!-- <table class="table table-striped">
             <thead class="thead-inverse">
               <tr>
                 <th>Message #</th>
@@ -45,7 +45,7 @@
             <tbody>
               
             </tbody>
-          </table>
+          </table> -->
         </div>
       </div>
     </div>
@@ -59,7 +59,58 @@
       var started = false;
       var startTimer = null;
       var acknowledgeTimer = null;
-      var lastMessage = null;
+      var lastHTML = "";
+
+      var itemMap = {
+        "40000004": "Greater Power Orb",
+        "40000005": "Major Power Orb",
+
+        "40000009": "Greater White Orb",
+        "40000010": "Major White Orb",
+
+        "40000014": "Greater Black Orb",
+        "40000015": "Major Black Orb",
+
+        "40000024": "Greater Summon Orb",
+        "40000025": "Major Summon Orb",
+
+        "40000029": "Greater Non Elemental Orb",
+        "40000030": "Major Non Elemental Orb",
+
+        "40000034": "Greater Fire Orb",
+        "40000035": "Major Fire Orb",
+
+        "40000039": "Greater Ice Orb",
+        "40000040": "Major Ice Orb",
+
+        "40000044": "Greater Lightning Orb",
+        "40000045": "Major Lightning Orb",
+
+        "40000049": "Greater Earth Orb",
+        "40000050": "Major Earth Orb",
+
+        "40000054": "Greater Wind Orb",
+        "40000055": "Major Wind Orb",
+
+        "40000059": "Greater Holy Orb",
+        "40000060": "Major Holy Orb",
+
+        "40000064": "Greater Dark Orb",
+        "40000065": "Major Dark Orb",
+
+        "40000066": "Power Crystal",
+        "40000067": "White Crystal",
+        "40000068": "Black Crystal",
+        "40000070": "Summon Crystal",
+        "40000071": "Non Elemental Crystal",
+        "40000072": "Fire Crystal",
+        "40000073": "Ice Crystal",
+        "40000074": "Lightning Crystal",
+        "40000075": "Earth Crystal",
+        "40000076": "Wind Crystal",
+        "40000077": "Holy Crystal",
+        "40000078": "Dark Crystal",
+      };
 
       function crankItUp() {
         if(startTimer) {
@@ -77,17 +128,35 @@
               console.log(data);
             });
 
-            socket.on(sessionId, function(serverMessage) {
-              if(lastMessage != serverMessage) {
-                update++;
-                $('.table tbody').prepend('<tr><td>#'+update+'</td><td>'+serverMessage+'</td></tr>');
-                
-                if(acknowledgeTimer) {
-                  clearTimeout(acknowledgeTimer);
-                }
+            socket.on(sessionId, function(message) {
+              var html = "";
+
+              if(message.error) {
+                html = '<div class="alert alert-danger" role="alert"><strong>Not in battle!</strong> You have to be in battle to see your drops!</div>';
+              } else if(message.drops == 0) {
+                html = '<div class="alert alert-warning" role="alert"><strong>Nope.</strong> No drops in this battle</div>';
+              } else {
+                $.each(message.drops, function(i, drop) {
+                  console.log(drop);
+
+                  if(drop.item_id && itemMap[drop.item_id]) {
+                    html += '<div class="alert alert-'+(parseInt(drop.rarity) > 4 ? 'success' : 'info')+'" role="alert"><h4 class="alert-heading">'+itemMap[drop.item_id]+' x'+drop.num+'</h4><img src="http://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/ability_material/'+drop.item_id+'/'+drop.item_id+'_112.png" /></div>';
+                  } else {
+                    html += '<div class="alert alert-warning" role="alert"><strong>Unmapped Item.</strong> {num: '+drop.num+', uid: '+drop.uid+', rarity: '+drop.rarity+', type: '+drop.item+', item_id: '+drop.item_id+'} </div>';
+                  }    
+                });  
               }
-              
-              lastMessage = serverMessage;
+
+              if(lastHTML != html) {
+                update++;
+                $('#attach-point').prepend(html);
+              }
+
+              lastHTML = html;
+
+              if(acknowledgeTimer) {
+                clearTimeout(acknowledgeTimer);
+              }
 
               acknowledgeTimer = setTimeout(function() {
                 socket.emit('sessionId', sessionId, function (data) {
