@@ -140,7 +140,7 @@
                   console.log(drop);
 
                   if(drop.item_id && itemMap[drop.item_id]) {
-                    html += '<div class="alert alert-'+(parseInt(drop.rarity) > 4 ? 'success' : 'info')+'" role="alert"><h4 class="alert-heading">'+itemMap[drop.item_id]+' x'+drop.num+'</h4><img src="http://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/ability_material/'+drop.item_id+'/'+drop.item_id+'_112.png" /></div>';
+                    html += '<div class="alert alert-'+(parseInt(drop.rarity) > 4 ? 'success' : 'info')+'" role="alert"><h4 class="alert-heading">'+itemMap[drop.item_id]+' x'+drop.num+'</h4><img src="https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/ability_material/'+drop.item_id+'/'+drop.item_id+'_112.png" /></div>';
                   } else {
                     html += '<div class="alert alert-warning" role="alert"><strong>Unmapped Item.</strong> {num: '+drop.num+', uid: '+drop.uid+', rarity: '+drop.rarity+', type: '+drop.item+', item_id: '+drop.item_id+'} </div>';
                   }    
