@@ -57,9 +57,15 @@
       var update = 0;
       var LOOP_FREQUENCY = 8000;
       var started = false;
+      var startTimer = null;
+      var acknowledgeTimer = null;
 
       function crankItUp() {
-        setTimeout(function () {
+        if(startTimer) {
+          clearTimeout(startTimer);
+        }
+
+        startTimer = setTimeout(function () {
           var sessionId = $('#session-id').val();
           if(sessionId && !started) {
 
@@ -74,7 +80,11 @@
               update++;
               $('.table tbody').prepend('<tr><td>#'+update+'</td><td>'+serverMessage+'</td></tr>');
               
-              setTimeout(function() {
+              if(acknowledgeTimer) {
+                clearTimeout(acknowledgeTimer);
+              }
+
+              acknowledgeTimer = setTimeout(function() {
                 socket.emit('sessionId', sessionId, function (data) {
                   console.log(data);
                 });
