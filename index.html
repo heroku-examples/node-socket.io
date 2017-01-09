@@ -59,6 +59,7 @@
       var started = false;
       var startTimer = null;
       var acknowledgeTimer = null;
+      var lastMessage = null;
 
       function crankItUp() {
         if(startTimer) {
@@ -77,12 +78,16 @@
             });
 
             socket.on(sessionId, function(serverMessage) {
-              update++;
-              $('.table tbody').prepend('<tr><td>#'+update+'</td><td>'+serverMessage+'</td></tr>');
-              
-              if(acknowledgeTimer) {
-                clearTimeout(acknowledgeTimer);
+              if(lastMessage != serverMessage) {
+                update++;
+                $('.table tbody').prepend('<tr><td>#'+update+'</td><td>'+serverMessage+'</td></tr>');
+                
+                if(acknowledgeTimer) {
+                  clearTimeout(acknowledgeTimer);
+                }
               }
+              
+              lastMessage = serverMessage;
 
               acknowledgeTimer = setTimeout(function() {
                 socket.emit('sessionId', sessionId, function (data) {
