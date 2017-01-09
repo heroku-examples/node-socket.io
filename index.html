@@ -54,15 +54,16 @@
       var el = document.getElementById('server-time');
       var update = 0;
       var LOOP_FREQUENCY = 8000;
-      var lastSessionId = null;
+      var started = false;
 
       function crankItUp() {
         setTimeout(function () {
           var sessionId = $('#session-id').val();
-          if(sessionId && lastSessionId != sessionId) {
+          if(sessionId && !started) {
 
-            lastSessionId = sessionId;
+            $('#session-id').addClass('disabled').attr('disabled','disabled');
 
+            started = true;
             socket.emit('sessionId', sessionId, function (data) {
               console.log(data);
             });
