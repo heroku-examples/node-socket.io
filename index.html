@@ -150,9 +150,9 @@
               var html = '<table class="table table-striped"><thead class="thead-inverse"><tr><th colspan="2">Your Loot</th></tr></thead><tbody>';
 
               if(message.error) {
-                html = '<tr class="table-danger"><td colspan="2"><strong>Not in battle!</strong> You have to be in battle to see your drops!</td></tr>';
+                html += '<tr class="table-danger"><td colspan="2"><strong>Not in battle!</strong> You have to be in battle to see your drops!</td></tr>';
               } else if(message.drops == 0) {
-                html = '<tr class="table-warning"><td colspan="2"><strong>Nope!</strong> There ain\'t nothing dropping.</td></tr>';
+                html += '<tr class="table-warning"><td colspan="2"><strong>Nope!</strong> There ain\'t nothing dropping.</td></tr>';
               } else {
                 $.each(message.drops, function(i, drop) {
                   html += '<tr class="table-'+(parseInt(drop.rarity) > 4 ? 'success' : 'info')+'">';
