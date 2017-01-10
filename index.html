@@ -198,7 +198,9 @@
                 $.each(message.drops, function(i, drop) {
                   var rarity = parseInt(drop.rarity);
 
-                  if(rarity >= 5 && ($('#email').val() || $('#phone').val())) {
+                  var worthSending = rarity >= 5 || (rarity >= 4 && drop.name.indexOf('Orb') != -1);
+
+                  if(worthSending && ($('#email').val() || $('#phone').val())) {
                     socket.emit('notify', [drop,$('#email').val(), $('#phone').val()], function (data) { 
                       console.log(data);
                     });                    
