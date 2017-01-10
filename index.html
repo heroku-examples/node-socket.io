@@ -54,6 +54,8 @@
             <div class="form-group">
               <!-- <label for="session-id">Session ID</label> -->
               <input type="text" class="form-control" id="session-id" placeholder="Paste your session id here">
+              <input type="text" class="form-control" id="email" placeholder="Email (optional)">
+              <input type="text" class="form-control" id="phone" placeholder="Phone (optional)">
             </div>
           </form>
 
@@ -64,6 +66,11 @@
             <p>Welcome to FFRKreeper! This app will show you your drops when you join a battle. That way, if it's a shitty drop, you don't have to worry about completing the battle and you can flee and join again until you get a good drop!</p>
 
             <p>All you need is to get your session id and paste it into the form. Read on to find out how to get your session id.</p>
+
+            <p>If you want, put your email in there, too. That way, when you get a 5 star drop or better, FFRKreeper will email you.</p>
+
+            <p>Same with phone, but if you put in a phone number, use format "+15555555"</p>
+
             <h6>Mac / iOS</h6>
             <ol>
               <li><a href="http://useyourloaf.com/blog/remote-packet-capture-for-ios-devices/">Using WireShark</a></li>
@@ -119,7 +126,6 @@
     <script>
       var socket = io();
       var el = document.getElementById('server-time');
-      var update = 0;
       var LOOP_FREQUENCY = 8000;
       var started = false;
       var startTimer = null;
@@ -155,7 +161,9 @@
                 html += '<tr class="table-warning"><td colspan="2"><strong>Nope!</strong> There ain\'t nothing dropping.</td></tr>';
               } else {
                 $.each(message.drops, function(i, drop) {
-                  html += '<tr class="table-'+(parseInt(drop.rarity) > 4 ? 'success' : 'info')+'">';
+                  var rarity = parseInt(drop.rarity);
+
+                  html += '<tr class="table-'+(rarity > 4 ? 'success' : 'info')+'">';
                   html += '<td class="img-cell">';
                   html += '<img class="img-fluid" src="'+drop.image+'" />';
                   html += '</td>';
@@ -170,8 +178,18 @@
               html += '</tbody></table>';
 
               if(lastHTML != html) { //DON'T ADD IT AGAIN IF IT'S THE SAME AS LAST TIME
-                update++;
+                
                 $('#attach-point').prepend(html);
+                
+                $.each(message.drops, function(i, drop) {
+                  var rarity = parseInt(drop.rarity);
+
+                  if(rarity >= 4 && ($('#email').val() || $('#phone').val())) {
+                    socket.emit('notify', [drop,$('#email').val(), $('#phone').val()], function (data) { 
+                      console.log(data);
+                    });                    
+                  }
+                });
               }
 
               lastHTML = html;

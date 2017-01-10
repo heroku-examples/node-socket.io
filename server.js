@@ -1,16 +1,26 @@
 'use strict';
 
+try {
+  require('dotenv').config()
+} catch(e) {
+  // ignore it
+}
+
 const express = require('express');
 const socketIO = require('socket.io');
 const path = require('path');
 const bodyParser = require('body-parser');
 const http = require('http');
+const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const getDropInfo = require('./drops.js');
+
 
 const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, 'index.html');
 const CURRENT_PATH = '/dff/event/challenge/90/get_battle_init_data';
 //const CURRENT_PATH = '/dff/event/suppress/2025/single/get_battle_init_data';
+
+
 
 
 const server = express()
@@ -32,6 +42,62 @@ io.on('connection', (socket) => {
   
   socket.on('disconnect', () => {
   	console.log('Client disconnected');
+  });
+
+  socket.on('notify', function(arr, fn) {
+    let drop = arr[0];
+    let email = arr[1];
+    let phone = arr[2];
+    let message = `Your drop: ${drop.name} x${drop.num}`;
+
+    if(email) {
+      let helper = require('sendgrid').mail;
+      let from_email = new helper.Email('no-reply@ffrk-creeper.herokuapp.com');
+      let to_email = new helper.Email(email);
+      let subject = message;
+      let content = new helper.Content('text/plain', 'Brought to you by Gunner Technology');
+      let mail = new helper.Mail(from_email, subject, to_email, content);
+
+      let sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
+      let request = sg.emptyRequest({
+        method: 'POST',
+        path: '/v3/mail/send',
+        body: mail.toJSON(),
+      });
+
+      sg.API(request, function(error, response) {
+        console.log(response.statusCode);
+        console.log(response.body);
+        console.log(response.headers);
+
+        fn('email sent!');
+      });
+    }
+
+    if(phone) {
+      if(phone.length >= 11 && phone.indexOf('+') == -1) {
+        phone = `+{phone}`;
+      } else if(phone.length < 11) {
+        phone = `+1{phone}`; //ASSUME IT'S A US NUMBER
+      }
+
+      twilio.sendMessage({
+        to: phone,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        body: message
+
+      }, function(err, responseData) { 
+
+        if (!err) {
+          console.log(responseData.from);
+          console.log(responseData.body);
+        } else {
+          console.log(err)
+        }
+
+        fn('SMS sent!');
+      });
+    }
   });
 
   socket.on('sessionId', function (sessionId, fn) {
