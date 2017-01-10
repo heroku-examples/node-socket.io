@@ -75,11 +75,14 @@ io.on('connection', (socket) => {
     }
 
     if(phone) {
+      phone = phone.toString();
       if(phone.length >= 11 && phone.indexOf('+') == -1) {
-        phone = `+{phone}`;
+        phone = `+${phone}`;
       } else if(phone.length < 11) {
-        phone = `+1{phone}`; //ASSUME IT'S A US NUMBER
+        phone = `+1${phone}`; //ASSUME IT'S A US NUMBER
       }
+
+      console.log(phone);
 
       twilio.sendMessage({
         to: phone,

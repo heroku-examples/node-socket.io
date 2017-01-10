@@ -47,6 +47,9 @@
     </nav>
 
     <div class="container-fluid">
+      <div class="alert alert-danger">
+        <strong>Update:</strong> You can now add your email or phone number to be notified when you get a 5* or better drop. Just remember to keep the app open in a browser window somewhere. Please see the instructions for more info.
+      </div>
       <div class="row">
         <div class="col-sm">
           <p></p>
@@ -67,9 +70,20 @@
 
             <p>All you need is to get your session id and paste it into the form. Read on to find out how to get your session id.</p>
 
+            <h6>Notifications</h6>
+
             <p>If you want, put your email in there, too. That way, when you get a 5 star drop or better, FFRKreeper will email you.</p>
 
             <p>Same with phone, but if you put in a phone number, use format "+15555555"</p>
+
+            <p>To Note:</p>
+            <ol>
+              <li>Notifications are only for 5* items or rarer.</li>
+              <li>Sending SMS and Email costs money. If this feature blows up, we may have to pull it</li>
+              <li>Email can be a bit slow</li>
+              <li>You need to have the app running in a browser window somewhere for notifications to work</li>
+            </ol>
+
 
             <h6>Mac / iOS</h6>
             <ol>
@@ -184,7 +198,7 @@
                 $.each(message.drops, function(i, drop) {
                   var rarity = parseInt(drop.rarity);
 
-                  if(rarity >= 4 && ($('#email').val() || $('#phone').val())) {
+                  if(rarity >= 5 && ($('#email').val() || $('#phone').val())) {
                     socket.emit('notify', [drop,$('#email').val(), $('#phone').val()], function (data) { 
                       console.log(data);
                     });                    
