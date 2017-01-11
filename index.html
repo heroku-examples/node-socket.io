@@ -98,6 +98,21 @@
               <li>Play a battle, get the session ID, then plug it into the web app.</li>
             </ol>
 
+            <h6>Android</h6>
+            <small>From /u/Pinguino21v</small>
+            <ol>
+              <li>Install <a href="https://play.google.com/store/apps/details?id=jp.co.taosoftware.android.packetcapture">tPacketCapture</a></li>
+              <li>Load it</li>
+              <li>Open FFRK and do something (change a menu)</li>
+              <li>Quit the VPN connexion (notification bar)</li>
+              <li>Open tPacketCapture again to find where the file containing the data is saved</li>
+              <li>Copy that file to a PC with WireShark installed</li>
+              <li>Open it with WireShark</li>
+              <li>Search for "http_session_sid" (ctrl+F) on the packet detail</li>
+              <li>Profit</li>
+              <li>Or instead of opening it with WireShark on a PC, open the file with a text editor on your phone and find "http_session_sid". It will be easier if the said editor have a "find text" option. Google app "Docs" have it.</li>
+            </ol>
+
             <h6>Notes</h6>
             <ol>
               <li>This app will not work for MP Raid Dungeons, but solo Raid Dungeons are fine</li>

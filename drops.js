@@ -97,7 +97,11 @@ function getDropInfo(drop) {
   } else if(drop.item_id) {
     drop.name = items[drop.item_id] || "Unknown Item: " + drop.uid;
   } else {
-    drop.name = "Unknown Item: " + drop.uid;
+    var id = "";
+    for(var i in drop) {
+      id += (i + ": " + drop[i]);
+    }
+    drop.name = "Unknown Item: " + id;
   }
 
   drop.image = getDropImage(drop);
