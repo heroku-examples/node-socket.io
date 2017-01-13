@@ -95,6 +95,7 @@ var items = {
   "25098005": "Giant Scarletite",
 
   "70000004": "Greater Growth Egg",
+  "95001014": "Gysahl Greens"
 
 };
 
@@ -120,7 +121,7 @@ function getDropInfo(drop) {
 
 function getDropImage(drop) {
   if(drop.amount) {
-    return "http://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/common_item/92000000.png";
+    return "https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/common_item/92000000.png";
   } else if(drop.name.match(/Egg/)) {
     return 'https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/growegg/'+drop.item_id+'/'+drop.item_id+'_112.png';
   } else if(drop.name.match(/Adamantite/) || drop.name.match(/Scarletite/)) {
@@ -128,7 +129,11 @@ function getDropImage(drop) {
   } else if(drop.name.match(/Mote/)) {
     return 'https://ffrk.static.denagames.com/dff/static/lang/image/'+drop.item_id+'/'+drop.item_id+'_112.png';
   } else if(drop.item_id) {
-    return 'https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/ability_material/'+drop.item_id+'/'+drop.item_id+'_112.png';
+    if(drop.name.match(/Orb/) || drop.name.match(/Crystal/)) {
+      return 'https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/ability_material/'+drop.item_id+'/'+drop.item_id+'_112.png';
+    } else {
+      return 'https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/common_item/'+drop.item_id+'.png';
+    }
   }
 
 
