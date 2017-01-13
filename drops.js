@@ -102,7 +102,11 @@ var items = {
 function getDropInfo(drop) {
   drop.num = drop.num || drop.amount || '1';
   
-  if(drop.amount) {
+  if(drop.round && drop.type == 22) {
+    drop.name = "Green Potion"
+  } else if(drop.round && drop.type == 21) {
+    drop.name = "Blue Potion"
+  } else if(drop.amount) {
     drop.name = "Gil";
   } else if(drop.item_id && items[drop.item_id]) {
     drop.name = items[drop.item_id];
