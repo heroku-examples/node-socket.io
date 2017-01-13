@@ -86,7 +86,16 @@ var items = {
   "40000077": "Holy Crystal",
   "40000078": "Dark Crystal",
 
-  "92000000": "Gil"
+  "92000000": "Gil",
+
+  "130200100": "Dexterity Mote (3★)",
+  "130400100": "Wisdom Mote (3★)",
+
+  "25099005": "Giant Adamantite",
+  "25098005": "Giant Scarletite",
+
+  "70000004": "Greater Growth Egg",
+
 };
 
 function getDropInfo(drop) {
@@ -94,12 +103,12 @@ function getDropInfo(drop) {
   
   if(drop.amount) {
     drop.name = "Gil";
-  } else if(drop.item_id) {
+  } else if(drop.item_id && items[drop.item_id]) {
     drop.name = items[drop.item_id] || "Unknown Item: " + drop.uid;
   } else {
     var id = "";
     for(var i in drop) {
-      id += (i + ": " + drop[i]);
+      id += (i + ": " + drop[i] + ", ");
     }
     drop.name = "Unknown Item: " + id;
   }
@@ -112,9 +121,16 @@ function getDropInfo(drop) {
 function getDropImage(drop) {
   if(drop.amount) {
     return "http://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/common_item/92000000.png";
+  } else if(drop.name.match(/Egg/)) {
+    return 'https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/growegg/'+drop.item_id+'/'+drop.item_id+'_112.png';
+  } else if(drop.name.match(/Adamantite/) || drop.name.match(/Scarletite/)) {
+    return 'https://ffrk.static.denagames.com/dff/static/lang/image/equipment_sp_material/'+drop.item_id+'/'+drop.item_id+'_112.png';
+  } else if(drop.name.match(/Mote/)) {
+    return 'https://ffrk.static.denagames.com/dff/static/lang/image/'+drop.item_id+'/'+drop.item_id+'_112.png';
   } else if(drop.item_id) {
     return 'https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/ability_material/'+drop.item_id+'/'+drop.item_id+'_112.png';
   }
+
 
   return 'https://placeholdit.imgix.net/~text?txtsize=50&txt=%3F&w=112&h=112&txttrack=0';
 }

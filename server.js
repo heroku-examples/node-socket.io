@@ -13,6 +13,9 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const getDropInfo = require('./drops.js');
+const automation = require('./automation.js');
+
+automation.begin();
 
 
 const PORT = process.env.PORT || 3000;
@@ -75,14 +78,14 @@ io.on('connection', (socket) => {
     }
 
     if(phone) {
-      phone = phone.toString();
+      ///Strip out any non numeric characters
+      phone = phone.toString().replace(/\D/g,'');
+
       if(phone.length >= 11 && phone.indexOf('+') == -1) {
         phone = `+${phone}`;
       } else if(phone.length < 11) {
         phone = `+1${phone}`; //ASSUME IT'S A US NUMBER
       }
-
-      console.log(phone);
 
       twilio.sendMessage({
         to: phone,

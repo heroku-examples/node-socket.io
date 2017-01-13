@@ -13,9 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",
     "dotenv": "^4.0.0",
     "express": "4.13.4",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
     "sendgrid": "^4.7.1",
     "socket.io": "1.4.6",
     "twilio": "^2.11.1"
