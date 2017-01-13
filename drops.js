@@ -104,7 +104,7 @@ function getDropInfo(drop) {
   if(drop.amount) {
     drop.name = "Gil";
   } else if(drop.item_id && items[drop.item_id]) {
-    drop.name = items[drop.item_id] || "Unknown Item: " + drop.uid;
+    drop.name = items[drop.item_id];
   } else {
     var id = "";
     for(var i in drop) {

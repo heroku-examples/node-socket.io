@@ -15,7 +15,7 @@ const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWI
 const getDropInfo = require('./drops.js');
 const automation = require('./automation.js');
 
-automation.begin();
+// automation.begin();
 
 
 const PORT = process.env.PORT || 3000;
