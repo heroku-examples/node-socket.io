@@ -198,6 +198,9 @@
                   html += '</td>';
                   html += '<td>';
                   html += (drop.name+' x'+drop.num);
+                  if(drop.round) {
+                    html += ' - Round ' + drop.round;
+                  }
                   html += '</td>';
                   html += '</tr>';
                   
