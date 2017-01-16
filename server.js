@@ -120,23 +120,32 @@ io.on('connection', (socket) => {
   		var message = {};
   		var data = "";
 
+      // console.log(resp);
+
   	  resp.on('data', function(chunk) {
   	    data += chunk;
   	  });
 
   	  resp.on("end", function() {
+
   	  	var json = {};
   	  	try {
   	  		 json = JSON.parse(data);	
   	  	} catch(e) { }
   	  	
   	  	var drops = [];
-
-  	  	if(!json.success) {
-  	  		message.error = "Not in battle";
+        console.log(data.length);
+        if(data.length === 0) {
+          message.error = "Session Id Expired: Your session id no longer valid!";
+          io.emit(sessionId, message);
+          return;
+        } else if(!json.success) {
+  	  		message.error = "Not in Battle: Go join a battle to see your drops!";
   	  		io.emit(sessionId, message);
   	  		return;
   	  	}
+
+        console.log(json)
 
 
   	  	json.battle.rounds.forEach(function(round) {

@@ -134,6 +134,12 @@ function getDropImage(drop) {
     return 'https://ffrk.static.denagames.com/dff/static/lang/image/equipment_sp_material/'+drop.item_id+'/'+drop.item_id+'_112.png';
   } else if(drop.name.match(/Mote/)) {
     return 'https://ffrk.static.denagames.com/dff/static/lang/image/'+drop.item_id+'/'+drop.item_id+'_112.png';
+  } else if(drop.name == "Green Potion") {
+    return 'https://ffrk.static.denagames.com/dff/static/lang/ab/battle/drop_icon/100002.png';
+  } else if(drop.name == "Blue Potion") {
+    return 'https://ffrk.static.denagames.com/dff/static/lang/ab/battle/drop_icon/100001.png';
+  } else if(drop.name == "Ether") {
+    return 'https://ffrk.static.denagames.com/dff/static/lang/ab/battle/drop_icon/100004.png';
   } else if(drop.item_id) {
     if(drop.name.match(/Orb/) || drop.name.match(/Crystal/)) {
       return 'https://ffrk.static.denagames.com/dff/static/lang/ww/compile/en/image/ability_material/'+drop.item_id+'/'+drop.item_id+'_112.png';

@@ -217,6 +217,10 @@ function getBattleInitDataForEventId(eventId) {
   return doSimpleGet("/dff/event/challenge/"+eventId+"/get_battle_init_data");  
 }
 
+function getBattleInitDataForSuppressId(suppressId) {
+  return doSimpleGet("/dff/event/suppress/"+suppressId+"/single/get_battle_init_data");  
+}
+
 var _g = {
   sessionId: null,
   userSessionKey: null,
@@ -241,27 +245,31 @@ function begin(userId, accessToken) {
     _g.beginBattleToken = browserData.beginBattleToken;
     _g.userSessionKey = userSessionKey;
 
-    return [getBattleInitDataForEventId(92)
+    return [
+      getBattleInitDataForSuppressId(2028),
+      // getBattleInitDataForEventId(92),
       // getRootData(),
       // getFriendFollowModalInfo(),
       // getChallengeData(92),
       // getWorldDungeonData(113092),
       // getDetailedFellowListing(),
-      // getBattleInitDataForEventId(92)
+      // getWorldBattles()
+      // doBeginBattle(92, 1130920135)
       // doEnterDungeon(92, { 
       //   dungeon_id: 11309214,
       //   fellow_user_id: null
       // })
-      // getWorldBattles()
-      // doBeginBattle(92, 1130920135)
     ];
   })
-  .spread((battleData) => {
-    console.log("~~~~~~ SUPPORTER ~~~~~~~~")
-    console.log(battleData.battle.supporter)
-    console.log("~~~~~~ BUDDY ~~~~~~~~")
-    console.log(battleData.battle.buddy)
+  .spread(function() {
+    console.log(arguments[0].battle.rounds)
   })
+  // .spread((battleData) => {
+  //   console.log("~~~~~~ SUPPORTER ~~~~~~~~")
+  //   console.log(battleData.battle.supporter)
+  //   console.log("~~~~~~ BUDDY ~~~~~~~~")
+  //   console.log(battleData.battle.buddy)
+  // })
   .catch(console.log)
 }
 
