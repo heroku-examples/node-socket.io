@@ -175,7 +175,7 @@ io.on('connection', (socket) => {
                     return;
                 }
 
-                // console.log(util.inspect(json, false, null));
+                console.log(util.inspect(json, false, null));
 
                 json.battle.rounds.forEach(function (round) {
                     round.drop_item_list.forEach(function (drop) {
@@ -212,7 +212,7 @@ io.on('connection', (socket) => {
                     });
             });
         }).on("error", function (e) {
-            //message = "Got an error: " + e.message;
+            message = "Got an error: " + e.message;
         });
 
         req.end();
