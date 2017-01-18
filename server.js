@@ -11,9 +11,22 @@ const socketIO = require('socket.io');
 const path = require('path');
 const bodyParser = require('body-parser');
 const http = require('http');
+const util = require('util');
 const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const mongoose = require('mongoose');
+const Promise = require('bluebird');
+const lodash = require('lodash');
+
+require('./config/mongoose.js').setup(mongoose);
+
 const getDropInfo = require('./drops.js');
 const automation = require('./automation.js');
+const Drop = require('./models/drop.js');
+const Battle = require('./models/battle.js');
+
+
+
+
 
 // automation.begin();
 
@@ -106,6 +119,34 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('recordDrop', function(arr, fn) {
+    var battleId = arr[0];
+    var dropItemId = arr[1];
+
+    Battle.findOne({denaBattleId: battleId})
+    .then(function(battle) {
+      if(battle) {
+         return Promise.resolve(battle);
+      } else {
+        return Battle.create({denaBattleId: battleId, dropRates: {}});
+      }
+    })
+    .then(function(battle) {
+
+      var drop = new Drop();
+      drop.battle = battle._id;
+      drop.denaItemId = dropItemId;
+
+      console.log(drop);
+
+      return drop.save();
+    })
+    .then(function() {
+      fn('recorded!');
+    });
+
+  });
+
   socket.on('sessionId', function (sessionId, fn) {
 
   	var options = {
@@ -145,7 +186,7 @@ io.on('connection', (socket) => {
   	  		return;
   	  	}
 
-        console.log(json)
+        // console.log(util.inspect(json, false, null));
 
 
   	  	json.battle.rounds.forEach(function(round) {
@@ -163,12 +204,24 @@ io.on('connection', (socket) => {
   	  		});
   	  	});
 
-  	  	console.log(drops);
-
-  	  	message.drops = drops;
-
-
-  	  	io.emit(sessionId, message);
+        Battle.findOne({denaBattleId: json.battle.battle_id})
+        .then(function(battle) {
+          if(battle) {
+             return Promise.resolve(battle);
+          } else {
+            return Battle.create({denaBattleId: json.battle.battle_id, dropRates: {}});
+          }
+        })
+        .then(function(battle) {
+          drops.forEach(function(d) {
+            if(d.item_id) {
+              d.dropRate = battle.dropRates[d.item_id];
+            }
+          });
+          
+          message.drops = drops;
+          io.emit(sessionId, message);
+        });
   	  	
   	  });
   	}).on("error", function(e){

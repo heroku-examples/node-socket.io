@@ -201,6 +201,13 @@
                   if(drop.round) {
                     html += ' - Round ' + drop.round;
                   }
+                  if(drop.dropRate) {
+                    html += '<ul>';
+                    html += '<li>Drops for this battle: ' + drop.dropRate.total + '</li>';
+                    html += '<li>Drops for this item: ' + drop.dropRate.hits + '</li>';
+                    html += '<li>Rate: ' + (drop.dropRate.rate * 100) + '%</li>';
+                    html += '</ul>';
+                  }
                   html += '</td>';
                   html += '</tr>';
                   
@@ -217,6 +224,12 @@
                   var rarity = parseInt(drop.rarity);
 
                   var worthSending = rarity >= 5 || (rarity >= 4 && drop.name.indexOf('Orb') != -1);
+
+                  if(drop.item_id) {
+                    socket.emit('recordDrop', [drop.battle_id, drop.item_id], function (data) {
+                      console.log(data);
+                    });
+                  }
 
                   if(worthSending && ($('#email').val() || $('#phone').val())) {
                     socket.emit('notify', [drop,$('#email').val(), $('#phone').val()], function (data) { 

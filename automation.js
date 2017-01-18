@@ -11,6 +11,7 @@ const querystring = require('querystring');
 const http = require('http');
 const rp = require('request-promise');
 const Promise = require('bluebird');
+const util = require('util');
 
 function getSessionId(userId, accessToken) {
   return new Promise(function(resolve, reject) {
@@ -221,6 +222,10 @@ function getBattleInitDataForSuppressId(suppressId) {
   return doSimpleGet("/dff/event/suppress/"+suppressId+"/single/get_battle_init_data");  
 }
 
+function getWdayDataForEvent(id) {
+  return doSimpleGet("/dff/event/wday/"+id+"/get_data");  
+}
+
 var _g = {
   sessionId: null,
   userSessionKey: null,
@@ -229,6 +234,11 @@ var _g = {
 }
 
 function begin(userId, accessToken) {
+  // getWdayDataForEvent(518)
+  // .then(function() {
+  //   console.log(util.inspect(arguments, false, null));
+  // });
+
   getSessionId(
     (userId || process.env.DENA_USER_ID),
     (accessToken || process.env.DENA_ACCESS_TOKEN)
@@ -246,8 +256,8 @@ function begin(userId, accessToken) {
     _g.userSessionKey = userSessionKey;
 
     return [
-      getBattleInitDataForSuppressId(2028),
-      // getBattleInitDataForEventId(92),
+      //getBattleInitDataForSuppressId(2028),
+      getBattleInitDataForEventId(92),
       // getRootData(),
       // getFriendFollowModalInfo(),
       // getChallengeData(92),
@@ -262,7 +272,7 @@ function begin(userId, accessToken) {
     ];
   })
   .spread(function() {
-    console.log(arguments[0].battle.rounds)
+    console.log(util.inspect(arguments[0].battle.battle_id, false, null));
   })
   // .spread((battleData) => {
   //   console.log("~~~~~~ SUPPORTER ~~~~~~~~")
