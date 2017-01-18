@@ -205,7 +205,7 @@
                     html += ' - Round ' + drop.round;
                   }
                   if(drop.dropRate) {
-                    html += '<p>Drop Rate: ' + (drop.dropRate.rate * 100) + '% - ' + drop.dropRate.hits + ' out of ' + drop.dropRate.total + ' drops for this battle have been for this item.</p>';
+                    html += '<p>Drop Rate: ' + Math.round(drop.dropRate.rate * 100) + '% - ' + drop.dropRate.hits + ' out of ' + drop.dropRate.total + ' drops for this battle have been for this item.</p>';
                   }
                   html += '</td>';
                   html += '</tr>';
