@@ -177,7 +177,7 @@ io.on('connection', (socket) => {
   	  	} catch(e) { }
   	  	
   	  	var drops = [];
-        console.log(data.length);
+
         if(data.length === 0) {
           message.error = "Session Id Expired: Your session id no longer valid!";
           io.emit(sessionId, message);
