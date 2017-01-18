@@ -155,11 +155,11 @@
     <script>
       var socket = io();
       var el = document.getElementById('server-time');
-      var LOOP_FREQUENCY = 8000;
+      var LOOP_FREQUENCY = 6000;
       var started = false;
       var startTimer = null;
       var acknowledgeTimer = null;
-      var lastHTML = "";
+      var lastDrops = "";
       var statusTimer = null;
 
 
@@ -182,6 +182,7 @@
             });
 
             socket.on(sessionId, function(message) {
+              var thisDrops = "";
               var html = '<table class="table table-striped"><thead class="thead-inverse"><tr><th colspan="2">Your Loot</th></tr></thead><tbody>';
 
               if(message.error) {
@@ -191,6 +192,8 @@
               } else {
                 $.each(message.drops, function(i, drop) {
                   var rarity = parseInt(drop.rarity);
+
+                  thisDrops += (drop.name+' x'+drop.num);
 
                   html += '<tr class="table-'+(rarity > 4 ? 'success' : 'info')+'">';
                   html += '<td class="img-cell">';
@@ -212,7 +215,7 @@
 
               html += '</tbody></table>';
 
-              if(lastHTML != html) { //DON'T ADD IT AGAIN IF IT'S THE SAME AS LAST TIME
+              if(lastDrops != thisDrops) { //DON'T ADD IT AGAIN IF IT'S THE SAME AS LAST TIME
                 
                 $('#attach-point').prepend(html);
                 
@@ -235,7 +238,7 @@
                 });
               }
 
-              lastHTML = html;
+              lastDrops = thisDrops;
 
               if(acknowledgeTimer) {
                 clearTimeout(acknowledgeTimer);
