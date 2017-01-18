@@ -22,13 +22,14 @@ schema.post('save', function (drop) {
 		return [drops, Battle.findById(drop.battle)]
 	})
 	.spread(function(drops, battle) {
-		
 		///TODO: totally not transactionally safe
 		battle.dropRates = battle.dropRates || {};
-		battle.dropRates[drop.denaItemId] = {
-			total: drops.length,
-			hits: lodash.filter(drops, (d) => { return drop.denaItemId == d.denaItemId }).length
-		};
+		for(var i in battle.dropRates) {
+			battle.dropRates[i] = {
+				total: drops.length,
+				hits: lodash.filter(drops, (d) => { return battle.dropRates[i].denaItemId == d.denaItemId }).length
+			};
+		}
 
 		battle.dropRates[drop.denaItemId].rate = (battle.dropRates[drop.denaItemId].hits * 1.0 ) / (battle.dropRates[drop.denaItemId].total * 1.0);
 
