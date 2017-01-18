@@ -123,6 +123,8 @@ io.on('connection', (socket) => {
     var battleId = arr[0];
     var dropItemId = arr[1];
 
+    console.log("recording drop");
+
     Battle.findOne({denaBattleId: battleId})
     .then(function(battle) {
       if(battle) {
@@ -214,6 +216,7 @@ io.on('connection', (socket) => {
         })
         .then(function(battle) {
           drops.forEach(function(d) {
+            d.battle_id = json.battle.battle_id;
             if(d.item_id && battle.dropRates && battle.dropRates[d.item_id]) {
               d.dropRate = battle.dropRates[d.item_id];
             }
