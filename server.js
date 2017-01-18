@@ -214,7 +214,7 @@ io.on('connection', (socket) => {
         })
         .then(function(battle) {
           drops.forEach(function(d) {
-            if(d.item_id) {
+            if(d.item_id && battle.dropRates && battle.dropRates[d.item_id]) {
               d.dropRate = battle.dropRates[d.item_id];
             }
           });
