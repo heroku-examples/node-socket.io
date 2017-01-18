@@ -27,7 +27,7 @@ schema.post('save', function (drop) {
 		for(var i in battle.dropRates) {
 			battle.dropRates[i] = {
 				total: drops.length,
-				hits: lodash.filter(drops, (d) => { return battle.dropRates[i].denaItemId == d.denaItemId }).length
+				hits: lodash.filter(drops, (d) => { return battle.dropRates[i] == d.denaItemId }).length
 			};
 		}
 

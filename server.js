@@ -188,7 +188,7 @@ io.on('connection', (socket) => {
   	  		return;
   	  	}
 
-        // console.log(util.inspect(json, false, null));
+        console.log(util.inspect(json, false, null));
 
 
   	  	json.battle.rounds.forEach(function(round) {
