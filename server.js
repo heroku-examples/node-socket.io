@@ -212,7 +212,7 @@ io.on('connection', (socket) => {
                     });
             });
         }).on("error", function (e) {
-            message = "Got an error: " + e.message;
+            //message = "Got an error: " + e.message;
         });
 
         req.end();
