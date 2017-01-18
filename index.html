@@ -1,289 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<link rel="stylesheet" href="css/main.css">
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js" integrity="sha256-jCRPoAgIIooCTnLmaSyKMPrFgFh6/T0e8c3i+KkZZ6U=" crossorigin="anonymous"></script> -->
 
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js" integrity="sha256-jCRPoAgIIooCTnLmaSyKMPrFgFh6/T0e8c3i+KkZZ6U=" crossorigin="anonymous"></script> -->
-
-  <style>
-  /*#attach-point img {
-    max-width: 50px;
-    height: auto;
-  }*/
-
-  body {
-    padding-bottom: 50px;
-  }
-
-  #attach-point .col {
-    /*white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;*/
-    text-align: center;
-  }
-
-  #attach-point .table-striped {
-    margin-top: 20px;
-  }
-
-  .img-cell {
-    width: 100px;
-  }
-
-  footer {
-    background-color: #f7f7f7;
-/*    color: white;*/
-  }
-  </style>
-
-  <title>FFRKreeper</title>
-  <body>
+<title>FFRKreeper</title>
+<body>
     <nav class="navbar navbar-light bg-faded">
-      <h1 class="navbar-brand mb-0">FFRKreeper</h1>
+        <h1 class="navbar-brand mb-0">FFRKreeper</h1>
     </nav>
 
     <div class="container-fluid">
-      <div class="alert alert-danger">
-        <strong>Update:</strong> The app will now tell you when your session id has expired. Please see the instructions for more info.
-      </div>
-      <div class="row">
-        <div class="col-sm">
-          <p></p>
-          <form>
-            <div class="form-group">
-              <!-- <label for="session-id">Session ID</label> -->
-              <input type="text" class="form-control" id="session-id" placeholder="Paste your session id here">
-              <input type="text" class="form-control" id="email" placeholder="Email (optional)">
-              <input type="text" class="form-control" id="phone" placeholder="Phone (optional)">
+        <div class="alert alert-danger">
+            <strong>Update:</strong> The app will now tell you when your session id has expired. Please see the instructions for more info.
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <p></p>
+                <form>
+                    <div class="form-group">
+                        <!-- <label for="session-id">Session ID</label> -->
+                        <input type="text" class="form-control" id="session-id" placeholder="Paste your session id here">
+                        <input type="text" class="form-control" id="email" placeholder="Email (optional)">
+                        <input type="text" class="form-control" id="phone" placeholder="Phone (optional)">
+                    </div>
+                </form>
+
+                <a class="btn btn-block btn-primary" id="btn-instructions" href="#">Show Instructions</a>
+
+                <div id="instructions" style="display: none;">
+                    <p></p>
+                    <p>Welcome to FFRKreeper! This app will show you your drops when you join a battle. That way, if it's a shitty drop, you don't have to worry about completing the battle and you can flee and join again until you get a good drop!</p>
+
+                    <p>All you need is to get your session id and paste it into the form - and keep the app open somewhere! Read on to find out how to get your session id.</p>
+
+                    <h6>Notifications</h6>
+
+                    <p>If you want, put your email in there, too. That way, when you get a 5 star drop or better, FFRKreeper will email you.</p>
+
+                    <p>Same with phone, but if you put in a phone number, use format "+15555555"</p>
+
+                    <p>To Note:</p>
+                    <ol>
+                        <li>Notifications are only for 5* items or rarer.</li>
+                        <li>Sending SMS and Email costs money. If this feature blows up, we may have to pull it</li>
+                        <li>Email can be a bit slow</li>
+                        <li>You need to have the app running in a browser window somewhere for notifications to work</li>
+                    </ol>
+
+                    <h6>Mac / iOS</h6>
+                    <ol>
+                        <li><a href="http://useyourloaf.com/blog/remote-packet-capture-for-ios-devices/">Using WireShark</a></li>
+                        <li>Fight a battle</li>
+                        <li>Parse through the messages from ffrk.denagames.com (maybe by IP address) and find your session id (it'll look like this: Cookie: http_session_sid=xxxxxxxxxxxxxxxxxx). Make sure you don't copy the semicolon or the 'http_session_sid' part.</li>
+                    </ol>
+
+                    <h6>PC / iOS</h6>
+                    <ol>
+                        <li><a href="https://blogs.esri.com/esri/supportcenter/2011/12/06/configuring-fiddler-to-capture-web-traffic-from-an-iphone-ipad-device/">Using Fiddler</a></li>
+                        <li>Play a battle, get the session ID, then plug it into the web app.</li>
+                    </ol>
+
+                    <h6>Android</h6>
+                    <small>From /u/Pinguino21v</small>
+                    <ol>
+                        <li>Install <a href="https://play.google.com/store/apps/details?id=jp.co.taosoftware.android.packetcapture">tPacketCapture</a></li>
+                        <li>Load it</li>
+                        <li>Open FFRK and do something (change a menu)</li>
+                        <li>Quit the VPN connexion (notification bar)</li>
+                        <li>Open tPacketCapture again to find where the file containing the data is saved</li>
+                        <li>Copy that file to a PC with WireShark installed</li>
+                        <li>Open it with WireShark</li>
+                        <li>Search for "http_session_sid" (ctrl+F) on the packet detail</li>
+                        <li>Profit</li>
+                        <li>Or instead of opening it with WireShark on a PC, open the file with a text editor on your phone and find "http_session_sid". It will be easier if the said editor have a "find text" option. Google app "Docs" have it.</li>
+                    </ol>
+
+                    <h6>Notes</h6>
+                    <ol>
+                        <li>This app will not work for MP Raid Dungeons, but solo Raid Dungeons are fine</li>
+                        <li>If the app tells you you're not in a battle and you are, you may need to refresh and get your session id again.</li>
+                        <li>Keep an eye on the 'status' below. If you become disconnect, refresh and paste your session id again.</li>
+                    </ol>
+                </div>
+                <p></p>
+
+                <!-- <small>Sanity Check: <span id='server-time'></span></small> -->
             </div>
-          </form>
-
-          <a class="btn btn-block btn-primary" id="btn-instructions" href="#">Show Instructions</a>
-
-          <div id="instructions" style="display: none;">
-            <p></p>
-            <p>Welcome to FFRKreeper! This app will show you your drops when you join a battle. That way, if it's a shitty drop, you don't have to worry about completing the battle and you can flee and join again until you get a good drop!</p>
-
-            <p>All you need is to get your session id and paste it into the form - and keep the app open somewhere! Read on to find out how to get your session id.</p>
-
-            <h6>Notifications</h6>
-
-            <p>If you want, put your email in there, too. That way, when you get a 5 star drop or better, FFRKreeper will email you.</p>
-
-            <p>Same with phone, but if you put in a phone number, use format "+15555555"</p>
-
-            <p>To Note:</p>
-            <ol>
-              <li>Notifications are only for 5* items or rarer.</li>
-              <li>Sending SMS and Email costs money. If this feature blows up, we may have to pull it</li>
-              <li>Email can be a bit slow</li>
-              <li>You need to have the app running in a browser window somewhere for notifications to work</li>
-            </ol>
-
-
-            <h6>Mac / iOS</h6>
-            <ol>
-              <li><a href="http://useyourloaf.com/blog/remote-packet-capture-for-ios-devices/">Using WireShark</a></li>
-              <li>Fight a battle</li>
-              <li>Parse through the messages from ffrk.denagames.com (maybe by IP address) and find your session id (it'll look like this: Cookie: http_session_sid=xxxxxxxxxxxxxxxxxx). Make sure you don't copy the semicolon or the 'http_session_sid' part.</li>
-            </ol>
-
-            <h6>PC / iOS</h6>
-            <ol>
-              <li><a href="https://blogs.esri.com/esri/supportcenter/2011/12/06/configuring-fiddler-to-capture-web-traffic-from-an-iphone-ipad-device/">Using Fiddler</a></li>
-              <li>Play a battle, get the session ID, then plug it into the web app.</li>
-            </ol>
-
-            <h6>Android</h6>
-            <small>From /u/Pinguino21v</small>
-            <ol>
-              <li>Install <a href="https://play.google.com/store/apps/details?id=jp.co.taosoftware.android.packetcapture">tPacketCapture</a></li>
-              <li>Load it</li>
-              <li>Open FFRK and do something (change a menu)</li>
-              <li>Quit the VPN connexion (notification bar)</li>
-              <li>Open tPacketCapture again to find where the file containing the data is saved</li>
-              <li>Copy that file to a PC with WireShark installed</li>
-              <li>Open it with WireShark</li>
-              <li>Search for "http_session_sid" (ctrl+F) on the packet detail</li>
-              <li>Profit</li>
-              <li>Or instead of opening it with WireShark on a PC, open the file with a text editor on your phone and find "http_session_sid". It will be easier if the said editor have a "find text" option. Google app "Docs" have it.</li>
-            </ol>
-
-            <h6>Notes</h6>
-            <ol>
-              <li>This app will not work for MP Raid Dungeons, but solo Raid Dungeons are fine</li>
-              <li>If the app tells you you're not in a battle and you are, you may need to refresh and get your session id again.</li>
-              <li>Keep an eye on the 'status' below. If you become disconnect, refresh and paste your session id again.</li>
-            </ol>
-          </div>
-          <p></p>
-          
-          <!-- <small>Sanity Check: <span id='server-time'></span></small> -->
+            <div class="col-sm">
+                <div id="attach-point"></div>
+            </div>
         </div>
-        <div class="col-sm">
-          <div id="attach-point"></div>
-        </div>
-      </div>
     </div>
 
     <footer class="fixed-bottom">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col">
-            <div class="d-flex flex-row">
-              <div class="p-2"><small>By <a href="http://gunnertech.com">Gunner Technology</a></small></div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex flex-row">
+                        <div class="p-2"><small>By <a href="http://gunnertech.com">Gunner Technology</a></small></div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <span class="badge badge-default">Status: Connecting...</span>
+                            <span style="display: none;" class="badge badge-danger">Status: Disconnected</span>
+                            <span style="display: none;" class="badge badge-success">Status: Connected</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col">
-            <div class="d-flex flex-row-reverse">
-              <div class="p-2">
-                <span class="badge badge-default">Status: Connecting...</span>
-                <span style="display: none;" class="badge badge-danger">Status: Disconnected</span>
-                <span style="display: none;" class="badge badge-success">Status: Connected</span>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </footer>
-    
+
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-      var socket = io();
-      var el = document.getElementById('server-time');
-      var LOOP_FREQUENCY = 6000;
-      var started = false;
-      var startTimer = null;
-      var acknowledgeTimer = null;
-      var lastDrops = "";
-      var statusTimer = null;
-
-
-      function crankItUp() {
-        if(startTimer) {
-          clearTimeout(startTimer);
-        }
-
-        startTimer = setTimeout(function () {
-          var sessionId = $('#session-id').val();
-          if(sessionId && !started) {
-
-            $('#session-id').addClass('disabled').attr('disabled','disabled');
-
-            started = true;
-
-            //SEND THE SESSION ID TO THE SERVER TO TELL IT TO GET THE DATA AND SUBSCRIBE TO THE ROOM
-            socket.emit('sessionId', sessionId, function (data) { 
-              console.log(data);
-            });
-
-            socket.on(sessionId, function(message) {
-              var thisDrops = "";
-              var html = '<table class="table table-striped"><thead class="thead-inverse"><tr><th colspan="2">Your Loot</th></tr></thead><tbody>';
-
-              if(message.error) {
-                html += '<tr class="table-danger"><td colspan="2"><strong>'+message.error+'</td></tr>';
-              } else if(message.drops == 0) {
-                html += '<tr class="table-warning"><td colspan="2"><strong>Nope!</strong> There ain\'t nothing dropping.</td></tr>';
-              } else {
-                $.each(message.drops, function(i, drop) {
-                  var rarity = parseInt(drop.rarity);
-
-                  thisDrops += (drop.name+' x'+drop.num);
-
-                  html += '<tr class="table-'+(rarity > 4 ? 'success' : 'info')+'">';
-                  html += '<td class="img-cell">';
-                  html += '<img class="img-fluid" src="'+drop.image+'" />';
-                  html += '</td>';
-                  html += '<td>';
-                  html += (drop.name+' x'+drop.num);
-                  if(drop.round) {
-                    html += ' - Round ' + drop.round;
-                  }
-                  if(drop.dropRate) {
-                    html += '<p>Drop Rate: ' + Math.round(drop.dropRate.rate * 100) + '% - ' + drop.dropRate.hits + ' out of ' + drop.dropRate.total + ' drops for this battle have been for this item.</p>';
-                  }
-                  html += '</td>';
-                  html += '</tr>';
-                  
-                });
-              }
-
-              html += '</tbody></table>';
-
-              if(lastDrops != thisDrops) { //DON'T ADD IT AGAIN IF IT'S THE SAME AS LAST TIME
-                
-                $('#attach-point').prepend(html);
-                
-                $.each(message.drops, function(i, drop) {
-                  var rarity = parseInt(drop.rarity);
-
-                  var worthSending = rarity >= 5 || (rarity >= 4 && drop.name.indexOf('Orb') != -1);
-
-                  if(drop.item_id) {
-                    socket.emit('recordDrop', [drop.battle_id, drop.item_id], function (data) {
-                      console.log(data);
-                    });
-                  }
-
-                  if(worthSending && ($('#email').val() || $('#phone').val())) {
-                    socket.emit('notify', [drop,$('#email').val(), $('#phone').val()], function (data) { 
-                      console.log(data);
-                    });                    
-                  }
-                });
-              }
-
-              lastDrops = thisDrops;
-
-              if(acknowledgeTimer) {
-                clearTimeout(acknowledgeTimer);
-              }
-
-              //WAIT A FEW SECONDS THEN TELL THE SERVER TO SEND ANOTHER UPDATE
-              acknowledgeTimer = setTimeout(function() {
-                socket.emit('sessionId', sessionId, function (data) {
-                  console.log(data);
-                });
-              }, LOOP_FREQUENCY);
-            });
-          }
-        }, 100);
-      }
-
-      $('#btn-instructions').click(function(event) {
-        event.preventDefault();
-
-        $('#instructions').toggle();
-      })
-
-      $('#session-id').change(crankItUp);
-
-      $('#session-id').on('paste', crankItUp);
-
-      statusTimer = setTimeout(function() {
-        $('.badge-default').hide();
-        $('.badge-success').hide();
-        $('.badge-danger').show();
-      },LOOP_FREQUENCY);
-
-      socket.on('time', function(timeString) {
-        clearTimeout(statusTimer);
-        statusTimer = setTimeout(function() {
-          $('.badge-default').hide();
-          $('.badge-success').hide();
-          $('.badge-danger').show();
-        }, LOOP_FREQUENCY);
-
-        $('.badge-default').hide();
-        $('.badge-success').show();
-        $('.badge-danger').hide();
-        // el.innerHTML = 'Server time: ' + timeString;
-      });
-    </script>
-  </body>
+    <script src="js/index.js"></script>
+</body>
 </html>
