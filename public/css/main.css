@@ -1,0 +1,28 @@
+﻿/*#attach-point img {
+    max-width: 50px;
+    height: auto;
+  }*/
+
+body {
+    padding-bottom: 50px;
+}
+
+#attach-point .col {
+    /*white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;*/
+    text-align: center;
+}
+
+#attach-point .table-striped {
+    margin-top: 20px;
+}
+
+.img-cell {
+    width: 100px;
+}
+
+footer {
+    background-color: #f7f7f7;
+    /*    color: white;*/
+}

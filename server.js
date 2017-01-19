@@ -1,7 +1,7 @@
 'use strict';
 
 try {
-  require('dotenv').config()
+  require('dotenv').config();
 } catch(e) {
   // ignore it
 }
@@ -42,6 +42,9 @@ const CURRENT_PATH = '/dff/event/challenge/90/get_battle_init_data';
 const server = express()
 	.use(bodyParser.json())
 	.use(bodyParser.json(bodyParser.urlencoded({ extended: true })))
+  .use(express.static(path.join(__dirname, 'public'), {
+    maxAge: 86400000 //one day
+  }))
 	.get('/', function (req, res) {
     res.sendFile(INDEX);
   })
