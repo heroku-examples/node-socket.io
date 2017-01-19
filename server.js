@@ -31,7 +31,7 @@ const server = express()
     .use(bodyParser.json())
     .use(bodyParser.json(bodyParser.urlencoded({ extended: true })))
     .use(express.static(path.join(__dirname, 'public'), {
-        maxAge: process.env.NODE_ENV == 'production' ? 86400000 : 0
+        maxAge: process.env.NODE_ENV === 'production' ? 86400000 : 0
     }))
     .get('/', function (req, res) {
         res.sendFile(INDEX);
@@ -50,10 +50,10 @@ io.on('connection', (socket) => {
         console.log('Client disconnected');
     });
 
-    socket.on('signin', (data, fn) => {
+    ///FAUX routing
+    socket.on('/signin', (data, fn) => {
         User.findOne({ 'dena.sessionId': data.sessionId })
             .then((user) => {
-                console.log(user);
                 if (user) {
                     return Promise.resolve(user);
                 } else {
@@ -64,6 +64,11 @@ io.on('connection', (socket) => {
                 return User.update({ 'dena.sessionId': data.sessionId }, { phone: data.phone, email: data.email });
             })
     });
+
+    // socket.on('/battle', (data, fn) => { });
+    // socket.on('/dungeon', (data, fn) => { });
+    // socket.on('/world', (data, fn) => { });
+    // socket.on('/user', (data, fn) => { });
 });
 
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
