@@ -142,8 +142,6 @@ io.on('connection', (socket) => {
       drop.battle = battle._id;
       drop.denaItemId = dropItemId;
 
-      console.log(drop);
-
       return drop.save();
     })
     .then(function() {
@@ -165,8 +163,6 @@ io.on('connection', (socket) => {
   	var req = http.get(options, function(resp){
   		var message = {};
   		var data = "";
-
-      // console.log(resp);
 
   	  resp.on('data', function(chunk) {
   	    data += chunk;
@@ -191,7 +187,7 @@ io.on('connection', (socket) => {
   	  		return;
   	  	}
 
-        console.log(util.inspect(json, false, null));
+        // console.log(util.inspect(json, false, null));
 
 
   	  	json.battle.rounds.forEach(function(round) {
