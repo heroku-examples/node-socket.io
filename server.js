@@ -147,7 +147,7 @@ io.on('connection', (socket) => {
     socket.on('sessionId', function (sessionId, fn) {
         var options = {
             url: 'http://ffrk.denagames.com/' + CURRENT_PATH,
-            // proxy: 'benNeedsThis',
+            proxy: process.env.PROXY_URL,
             headers: {
                 'Cookie': 'http_session_sid=' + sessionId
             }
@@ -164,7 +164,7 @@ io.on('connection', (socket) => {
 
             var drops = [];
 
-            if (data.length === 0) {
+            if (data && data.length === 0) {
                 message.error = "Session Id Expired: Your session id no longer valid!";
                 io.emit(sessionId, message);
                 return;
