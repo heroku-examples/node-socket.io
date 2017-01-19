@@ -8,6 +8,7 @@ const schema = new mongoose.Schema({
     realm: { type: String },  //categorize the FF realm...aka ff1, ff5, ff13
     dungeonName: { type: String },
     battleName: { type: String },  //part1, part2, part 3 boss stage etc...
+    stamina: { type: Number },  //with this we can compute the orb/stam ratio...not sure where to get it
     dropRates: mongoose.Schema.Types.Mixed,
     drops: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Drop' }]
 });
