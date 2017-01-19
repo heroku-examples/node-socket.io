@@ -1,4 +1,5 @@
-﻿(function () {
+﻿
+(function () {
     var socket = io();
     var el = document.getElementById('server-time');
     var LOOP_FREQUENCY = 6000;

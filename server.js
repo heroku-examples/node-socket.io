@@ -43,7 +43,7 @@ const server = express()
 	.use(bodyParser.json())
 	.use(bodyParser.json(bodyParser.urlencoded({ extended: true })))
   .use(express.static(path.join(__dirname, 'public'), {
-    maxAge: 86400000 //one day
+    maxAge: process.env.NODE_ENV == 'production' ? 86400000 : 0
   }))
 	.get('/', function (req, res) {
     res.sendFile(INDEX);
