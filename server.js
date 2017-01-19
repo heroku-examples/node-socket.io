@@ -11,6 +11,7 @@ const socketIO = require('socket.io');
 const path = require('path');
 const bodyParser = require('body-parser');
 const http = require('http');
+const request = require('request');
 const util = require('util');
 const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const mongoose = require('mongoose');
@@ -114,6 +115,8 @@ io.on('connection', (socket) => {
     socket.on('recordDrop', function (arr, fn) {
         var battleId = arr[0];
         var dropItemId = arr[1];
+        var qty = arr[2];
+        var rarity = arr[3];
 
         console.log("recording drop");
 
@@ -131,6 +134,8 @@ io.on('connection', (socket) => {
                 var drop = new Drop();
                 drop.battle = battle._id;
                 drop.denaItemId = dropItemId;
+                drop.qty = qty;
+                drop.rarity = rarity;
 
                 return drop.save();
             })
@@ -141,86 +146,76 @@ io.on('connection', (socket) => {
 
     socket.on('sessionId', function (sessionId, fn) {
         var options = {
-            host: 'ffrk.denagames.com',
-            port: 80,
-            path: CURRENT_PATH,
-            headers: { 'Cookie': 'http_session_sid=' + sessionId }
+            url: 'http://ffrk.denagames.com/' + CURRENT_PATH,
+            // proxy: 'benNeedsThis',
+            headers: {
+                'Cookie': 'http_session_sid=' + sessionId
+            }
         };
 
-        var req = http.get(options, function (resp) {
+        request.get(options, function (e, r, data) {
+            if (e) console.log("Got an error: " + e.message);
             var message = {};
-            var data = "";
 
-            resp.on('data', function (chunk) {
-                data += chunk;
-            });
+            var json = {};
+            try {
+                json = JSON.parse(data);
+            } catch (e) { }
 
-            resp.on("end", function () {
-                var json = {};
-                try {
-                    json = JSON.parse(data);
-                } catch (e) { }
+            var drops = [];
 
-                var drops = [];
+            if (data.length === 0) {
+                message.error = "Session Id Expired: Your session id no longer valid!";
+                io.emit(sessionId, message);
+                return;
+            } else if (!json.success) {
+                message.error = "Not in Battle: Go join a battle to see your drops!";
+                io.emit(sessionId, message);
+                return;
+            }
 
-                if (data.length === 0) {
-                    message.error = "Session Id Expired: Your session id no longer valid!";
-                    io.emit(sessionId, message);
-                    return;
-                } else if (!json.success) {
-                    message.error = "Not in Battle: Go join a battle to see your drops!";
-                    io.emit(sessionId, message);
-                    return;
-                }
+            // console.log(util.inspect(json, false, null));
 
-                // console.log(util.inspect(json, false, null));
+            json.battle.rounds.forEach(function (round) {
+                round.drop_item_list.forEach(function (drop) {
+                    drops.push(getDropInfo(drop));
+                });
 
-                json.battle.rounds.forEach(function (round) {
-                    round.drop_item_list.forEach(function (drop) {
-                        drops.push(getDropInfo(drop));
-                    });
-
-                    round.enemy.forEach(function (enemy) {
-                        enemy.children.forEach(function (child) {
-                            child.drop_item_list.forEach(function (drop) {
-                                drops.push(getDropInfo(drop));
-                            });
+                round.enemy.forEach(function (enemy) {
+                    enemy.children.forEach(function (child) {
+                        child.drop_item_list.forEach(function (drop) {
+                            drops.push(getDropInfo(drop));
                         });
                     });
                 });
-
-                Battle.findOne({ denaBattleId: json.battle.battle_id })
-                    .then(function (battle) {
-                        if (battle) {
-                            return Promise.resolve(battle);
-                        } else {
-                            return Battle.create(
-                                {
-                                    denaBattleId: json.battle.battle_id,
-                                    denaDungeonId: json.battle.dungeon.dungeon_id,
-                                    eventId: json.battle.event.event_id,
-                                    eventType: json.battle.event.event_type,
-                                    dropRates: {}
-                                });
-                        }
-                    })
-                    .then(function (battle) {
-                        drops.forEach(function (d) {
-                            d.battle_id = json.battle.battle_id;
-                            if (d.item_id && battle.dropRates && battle.dropRates[d.item_id]) {
-                                d.dropRate = battle.dropRates[d.item_id];
-                            }
-                        });
-
-                        message.drops = drops;
-                        io.emit(sessionId, message);
-                    });
             });
-        }).on("error", function (e) {
-            message = "Got an error: " + e.message;
-        });
 
-        req.end();
+            Battle.findOne({ denaBattleId: json.battle.battle_id })
+                .then(function (battle) {
+                    if (battle) {
+                        return Promise.resolve(battle);
+                    } else {
+                        return Battle.create({
+                            denaBattleId: json.battle.battle_id,
+                            denaDungeonId: json.battle.dungeon.dungeon_id,
+                            eventId: json.battle.event.event_id,
+                            eventType: json.battle.event.event_type,
+                            dropRates: {}
+                        });
+                    }
+                })
+                .then(function (battle) {
+                    drops.forEach(function (d) {
+                        d.battle_id = json.battle.battle_id;
+                        if (d.item_id && battle.dropRates && battle.dropRates[d.item_id]) {
+                            d.dropRate = battle.dropRates[d.item_id];
+                        }
+                    });
+
+                    message.drops = drops;
+                    io.emit(sessionId, message);
+                });
+        });
 
         fn('woot!');
     });

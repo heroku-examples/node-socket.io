@@ -76,7 +76,7 @@
                             var worthSending = rarity >= 5 || (rarity >= 4 && drop.name.indexOf('Orb') != -1);
 
                             if (drop.item_id) {
-                                socket.emit('recordDrop', [drop.battle_id, drop.item_id], function (data) {
+                                socket.emit('recordDrop', [drop.battle_id, drop.item_id, drop.num, drop.rarity], function (data) {
                                     console.log(data);
                                 });
                             }
