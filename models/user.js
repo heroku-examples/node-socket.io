@@ -78,13 +78,16 @@ schema.statics.doDropCheck = (io) => {
       .catch((error) => {
       	if(error.notify) {
       		io.emit(`/drops/${user.dena.sessionId}`, error); /// Send it to the browser
-	      	if(user.email) {
-	      	  user.sendEmail(error.message)
-	      	}
 
-	      	if(user.phone) {
-	      	  user.sendSms(error.message)
-	      	}
+      		if(error.name == "Session Error") { // tell the user their session died
+      			if(user.email) {
+      			  user.sendEmail(error.message)
+      			}
+
+      			if(user.phone) {
+      			  user.sendSms(error.message)
+      			}
+      		}
 	      }
       })
     }).return(users);
@@ -182,7 +185,7 @@ schema.methods.checkForDrops = function() {
 	      } else if(!json.success) {
 	        const proxiedError = new Error();
           proxiedError.message = "Not in Battle: Go join a battle to see your drops!";
-          proxiedError.name = 'Drop Error';
+          proxiedError.name = 'Out of Battle Error';
           proxiedError.notify = self.inBattle; /// we don't want to keep notifying them.
 
 	      	self.inBattle = false;
@@ -190,9 +193,9 @@ schema.methods.checkForDrops = function() {
 		  		return;
 		  	} else if(self.inBattle) {
 		  		const proxiedError = new Error();
-          proxiedError.message = "Already Recroded this drop";
-          proxiedError.name = 'Drop Error';
-          proxiedError.notify = false;
+          proxiedError.message = "Already Recorded this drop";
+          proxiedError.name = 'Duplicate Error';
+          proxiedError.notify = true;
 
 		  		reject(proxiedError);
 		  		return;

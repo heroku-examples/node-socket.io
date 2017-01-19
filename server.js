@@ -59,10 +59,10 @@ io.on('connection', (socket) => {
   	console.log('Client disconnected');
   });
 
-  socket.on('signin', (data, fn) => {
+  ///FAUX routing
+  socket.on('/signin', (data, fn) => {
     User.findOne({'dena.sessionId': data.sessionId})
     .then((user) => {
-      console.log(user);
       if(user) {
         return Promise.resolve(user);
       } else {
@@ -70,10 +70,14 @@ io.on('connection', (socket) => {
       }
     })
     .then((user) => {
-
       return User.update({'dena.sessionId': data.sessionId}, {phone: data.phone, email: data.email});
     })
   });
+
+  // socket.on('/battle', (data, fn) => { });
+  // socket.on('/dungeon', (data, fn) => { });
+  // socket.on('/world', (data, fn) => { });
+  // socket.on('/user', (data, fn) => { });
 });
 
 
