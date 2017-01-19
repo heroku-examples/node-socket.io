@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     var socket = io();
     var LOOP_FREQUENCY = 6000;
     var statusTimer = setTimeout(function () {

@@ -42,6 +42,7 @@ schema.post('save', function (drop) {
                         hits: lodash.filter(drops, (d) => { return i.toString() == (d.denaItemId || "").toString() }).length
                     };
                 }
+
             }
 
             battle.dropRates[drop.denaItemId].rate = (battle.dropRates[drop.denaItemId].hits * 1.0) / (battle.dropRates[drop.denaItemId].total * 1.0);
