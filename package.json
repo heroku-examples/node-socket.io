@@ -2,7 +2,7 @@
   "name": "websockets-socket.io",
   "version": "1.0.0",
   "engines": {
-    "node": "13.1.0"
+    "node": "12.x"
   },
   "description": "",
   "main": "index.js",
